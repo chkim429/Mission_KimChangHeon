@@ -46,7 +46,18 @@ public class LikeablePersonService {
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
 
+    @Transactional
+    public RsData<LikeablePerson> delete(Integer id) {
+        Optional<LikeablePerson> likeablePersonOptional = likeablePersonRepository.findById(id);
+        if (likeablePersonOptional.isPresent()) {
+            LikeablePerson likeablePerson = likeablePersonOptional.get();
+            likeablePersonRepository.delete(likeablePerson);
+            return RsData.of("S-2", "삭제 완료 되었습니다.");
 
+        } else {
+            return RsData.of("F-3", "삭제 대상이 존재하지 않습니다.");
+        }
+    }
 
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
