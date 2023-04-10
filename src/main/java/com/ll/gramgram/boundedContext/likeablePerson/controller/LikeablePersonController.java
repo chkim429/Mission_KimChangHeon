@@ -4,20 +4,16 @@ import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
-import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -27,6 +23,7 @@ public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/add")
     public String showAdd() {
         return "usr/likeablePerson/add";
@@ -39,6 +36,7 @@ public class LikeablePersonController {
         private final int attractiveTypeCode;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
         RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
@@ -50,6 +48,7 @@ public class LikeablePersonController {
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String showList(Model model) {
         InstaMember instaMember = rq.getMember().getInstaMember();
@@ -62,11 +61,20 @@ public class LikeablePersonController {
 
         return "usr/likeablePerson/list";
     }
-    @GetMapping("delete/{id}")
-    public String delete(@PathVariable Integer id) {
-        RsData<LikeablePerson> likeablePersonRsData = likeablePersonService.delete(id);
 
-        return rq.redirectWithMsg("/likeablePerson/list", likeablePersonRsData);
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id) {
+        LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null);
+
+        RsData canActorDeleteRsData = likeablePersonService.canActorDelete(rq.getMember(), likeablePerson);
+
+        if (canActorDeleteRsData.isFail()) return rq.historyBack(canActorDeleteRsData);
+
+        RsData deleteRs = likeablePersonService.delete(likeablePerson);
+
+        if (deleteRs.isFail()) return rq.historyBack(deleteRs);
+
+        return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
 }
-
