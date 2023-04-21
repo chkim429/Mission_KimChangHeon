@@ -19,6 +19,7 @@ import java.util.Optional;
 public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
+    private final int MaxLikeablePersonCount = 10;
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
@@ -30,8 +31,27 @@ public class LikeablePersonService {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
+
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+
+        List<LikeablePerson> likeablePersonList = likeablePersonRepository.findByFromInstaMemberId(fromInstaMember.getId());
+        if (likeablePersonList.size() >= MaxLikeablePersonCount) {
+            return RsData.of("F-4", MaxLikeablePersonCount + "명 이상의 호감상대를 등록할 수 없습니다.");
+        }
+
+        Optional<LikeablePerson> optionalLikeablePerson = likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId());
+        if (optionalLikeablePerson.isPresent()) {
+            LikeablePerson likeablePerson = optionalLikeablePerson.get();
+            if (likeablePerson.getAttractiveTypeCode() != attractiveTypeCode) {
+                likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+                likeablePersonRepository.save(likeablePerson);
+                return RsData.of("S-2", "호감 사유가 수정 됐습니다.");
+            } else {
+                return RsData.of("F-3", "중복으로 호감을 표시할 수 없습니다.");
+            }
+        }
+
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
@@ -52,6 +72,7 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
+
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
