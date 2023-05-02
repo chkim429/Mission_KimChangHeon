@@ -47,10 +47,10 @@ public class NotProd {
                 Member memberUser4 = memberService.join("user4", "1234").getData();
                 Member memberUser5 = memberService.join("user5", "1234").getData();
 
-                Member memberUser6ByKakao = memberService.whenSocialLogin("KAKAO", "KAKAO__%s".formatted(kakaoDevUserOAuthId)).getData();
-                Member memberUser7ByGoogle = memberService.whenSocialLogin("GOOGLE", "GOOGLE__%s".formatted(googleDevUserOAuthId)).getData();
-                Member memberUser8ByNaver = memberService.whenSocialLogin("NAVER", "NAVER__%s".formatted(naverDevUserOAuthId)).getData();
-                Member memberUser9ByFacebook = memberService.whenSocialLogin("FACEBOOK", "FACEBOOK__%s".formatted(facebookDevUserOAuthId)).getData();
+                Member memberUser6ByKakao = memberService.whenSocialLogin("KAKAO", "KAKAO__2772087697".formatted(kakaoDevUserOAuthId)).getData();
+                Member memberUser7ByGoogle = memberService.whenSocialLogin("GOOGLE", "GOOGLE__106611976489807216791".formatted(googleDevUserOAuthId)).getData();
+                Member memberUser8ByNaver = memberService.whenSocialLogin("NAVER", "NAVER__aTc2b1q0oIKVd8t0_AxkbSPZNjkGZKA3UUiZt-s95-0".formatted(naverDevUserOAuthId)).getData();
+                Member memberUser9ByFacebook = memberService.whenSocialLogin("FACEBOOK", "FACEBOOK__3592072591016379".formatted(facebookDevUserOAuthId)).getData();
 
                 instaMemberService.connect(memberUser2, "insta_user2", "M");
                 instaMemberService.connect(memberUser3, "insta_user3", "W");
