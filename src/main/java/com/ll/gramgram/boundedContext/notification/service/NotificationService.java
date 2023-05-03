@@ -16,10 +16,4 @@ public class NotificationService {
     public List<Notification> findByToInstaMember(InstaMember toInstaMember) {
         return notificationRepository.findByToInstaMember(toInstaMember);
     }
-    public void save(Notification notification) {
-    }
-
-    public Notification findById(Long id) {
-        return null;
-    }
 }
