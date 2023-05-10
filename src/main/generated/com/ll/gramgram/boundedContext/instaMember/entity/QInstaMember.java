@@ -25,9 +25,6 @@ public class QInstaMember extends EntityPathBase<InstaMember> {
     public final StringPath accessToken = createString("accessToken");
 
     //inherited
-    public final NumberPath<Integer> attractiveTypeCode = _super.attractiveTypeCode;
-
-    //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
     public final ListPath<com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson, com.ll.gramgram.boundedContext.likeablePerson.entity.QLikeablePerson> fromLikeablePeople = this.<com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson, com.ll.gramgram.boundedContext.likeablePerson.entity.QLikeablePerson>createList("fromLikeablePeople", com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson.class, com.ll.gramgram.boundedContext.likeablePerson.entity.QLikeablePerson.class, PathInits.DIRECT2);

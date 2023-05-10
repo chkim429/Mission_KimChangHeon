@@ -128,10 +128,12 @@ public class LikeablePersonController {
 
         if (instaMember != null) {
             List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
-            if (gender != null) {
-                likeablePeople = likeablePeople.stream()
-                        .filter(person -> person.getToInstaMember().getGender().equalsIgnoreCase(gender))
-                        .collect(Collectors.toList());
+            if (gender != null && !gender.isEmpty()) {
+                if (gender.equalsIgnoreCase("M") || gender.equalsIgnoreCase("W")) {
+                    likeablePeople = likeablePeople.stream()
+                            .filter(person -> person.getToInstaMember().getGender().equalsIgnoreCase(gender))
+                            .collect(Collectors.toList());
+                }
             }
             if (attractiveTypeCode != 0) {
                 likeablePeople = likeablePeople.stream()

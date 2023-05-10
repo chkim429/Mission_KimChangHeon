@@ -17,7 +17,6 @@ public abstract class InstaMemberBase extends BaseEntity {
     @Setter
     String gender;
 
-
     long likesCountByGenderWomanAndAttractiveTypeCode1;
     long likesCountByGenderWomanAndAttractiveTypeCode2;
     long likesCountByGenderWomanAndAttractiveTypeCode3;
