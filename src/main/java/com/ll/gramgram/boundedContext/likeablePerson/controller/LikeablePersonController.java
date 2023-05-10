@@ -123,7 +123,7 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model, @RequestParam(required = false) String gender) {
+    public String showToList(Model model, @RequestParam(required = false) String gender, @RequestParam(defaultValue = "0") int attractiveTypeCode) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         if (instaMember != null) {
@@ -133,7 +133,11 @@ public class LikeablePersonController {
                         .filter(person -> person.getToInstaMember().getGender().equalsIgnoreCase(gender))
                         .collect(Collectors.toList());
             }
-
+            if (attractiveTypeCode != 0) {
+                likeablePeople = likeablePeople.stream()
+                        .filter(person -> person.getAttractiveTypeCode() == attractiveTypeCode)
+                        .collect(Collectors.toList());
+            }
             model.addAttribute("likeablePeople", likeablePeople);
         }
         return "usr/likeablePerson/toList";
