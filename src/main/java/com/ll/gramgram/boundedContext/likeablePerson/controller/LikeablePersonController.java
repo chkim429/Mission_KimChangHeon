@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -123,10 +124,14 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model, @RequestParam(required = false) String gender, @RequestParam(defaultValue = "0") int attractiveTypeCode) {
+    public String showToList(Model model,
+                             @RequestParam(required = false) String gender,
+                             @RequestParam(defaultValue = "0") int attractiveTypeCode,
+                             @RequestParam(defaultValue = "1")  int sortCode) {
+
         InstaMember instaMember = rq.getMember().getInstaMember();
 
-        if (instaMember != null) {
+        if (instaMember != null) { // 성별 필터링
             List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
             if (gender != null && !gender.isEmpty()) {
                 if (gender.equalsIgnoreCase("M") || gender.equalsIgnoreCase("W")) {
@@ -135,11 +140,35 @@ public class LikeablePersonController {
                             .collect(Collectors.toList());
                 }
             }
-            if (attractiveTypeCode != 0) {
+            if (attractiveTypeCode != 0) { // 호감사유 필터링
                 likeablePeople = likeablePeople.stream()
                         .filter(person -> person.getAttractiveTypeCode() == attractiveTypeCode)
                         .collect(Collectors.toList());
             }
+
+            switch (sortCode) {
+                case 2:
+                    likeablePeople.sort(Comparator.comparing(LikeablePerson::getCreateDate));
+                    break;
+                case 3:
+                    likeablePeople.sort(Comparator.comparing(LikeablePerson::getFromInstaMember,
+                                        Comparator.comparingLong(InstaMember::getLikes).reversed()));
+                    break;
+                case 4:
+                    likeablePeople.sort(Comparator.comparing(LikeablePerson::getFromInstaMember,
+                                        Comparator.comparingLong(InstaMember::getLikes)));
+                    break;
+                case 5:
+                    likeablePeople.sort(Comparator.comparing(LikeablePerson::getFromInstaMember,
+                                        Comparator.comparing(InstaMember::getGender)).reversed());
+                    break;
+                case 6:
+                    likeablePeople.sort(Comparator.comparing(LikeablePerson::getAttractiveTypeCode));
+                    break;
+                default:
+                    likeablePeople.sort(Comparator.comparing(LikeablePerson::getCreateDate).reversed());
+            }
+
             model.addAttribute("likeablePeople", likeablePeople);
         }
         return "usr/likeablePerson/toList";
