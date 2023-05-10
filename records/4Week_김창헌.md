@@ -33,11 +33,23 @@
 ---
 
 **[접근 방법]**
+- 필수미션1 - 내가 받은 호감리스트에서 성별 필터링 기능 구현
+  - 스트림으로 filter() 메서드를 이용해서 성별 필터링을 구현했다.
+  - 'person'은 'LikeablePerson' 객체를 가리키는 변수이다.
+  - 'person.getToInstaMember().getGender().equalsIgnoreCase(gender)'를 조건으로 설정하여서, 'LikeablePerson' 객체의 'toInstaMember'필드의 'gender' 필드가 'gender' 매개변수와 같은 경우에만 필터링 되게 설정했다.
+  - 'collect()' 메서드를 호출하여서 스트림의 결과를 컬렉션으로 수집했다. 이때 'Collectors.toList()' 메서드를 사용해서 'List<LikeablePerson>' 형식으로 수집을 진행했다.
+- 필수미션2 - 네이버 클라우드 플랫폼을 통한 배포(도메인,https 까지 적용)
+  - 강사님의 영상을 그대로 따라서 진행했다.
+  - NPM을 설치해서 나의 도메인으로 요청이 오면, 그 요청을 172.17.0.1:8080으로 토스 시켰다.
 
 
+- 선택미션1 - 내가 받은 호감리스트에서 호감사유 필터링 기능 구현
+  - 필수미션1과 비슷한 방법으로 진행했다.
+  - 'person.getAttractiveTypeCode() == attractiveTypeCode'를 조건으로 설정해서, 'LikeablePerson' 객체의 'attractiveTypeCode' 필드가 'attractiveTypeCode' 매개변수와 같은 경우에만 필터링 했다.
 
 
 
 
 **[특이사항]**
+- 매개변수가 잘못돼서 필터링이 제대로 되지 않는 경우가 발생해서 수정했다.
 
