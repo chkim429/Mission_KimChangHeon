@@ -25,6 +25,9 @@ public class QInstaMemberSnapshot extends EntityPathBase<InstaMemberSnapshot> {
     public final QInstaMemberBase _super = new QInstaMemberBase(this);
 
     //inherited
+    public final NumberPath<Integer> attractiveTypeCode = _super.attractiveTypeCode;
+
+    //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
     public final StringPath eventTypeCode = createString("eventTypeCode");
